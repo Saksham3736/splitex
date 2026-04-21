@@ -19,6 +19,14 @@ app.use(express.json());
 // Create API router
 const apiRouter = express.Router();
 
+// API root health endpoint
+apiRouter.get('/', (req, res) => {
+  res.json({
+    message: 'SplitEX API root',
+    version: '1.0.0'
+  });
+});
+
 // Mount all routes
 apiRouter.use('/auth', authRoutes);
 apiRouter.use('/user', userRoutes);
