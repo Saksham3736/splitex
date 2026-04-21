@@ -15,7 +15,7 @@ export default function AuthPage() {
       <input
         type={type}
         id={id}
-        className="block w-full px-4 pt-6 pb-2 text-[#0f172a] dark:text-[#C2FCF7] bg-[#ffffff] dark:bg-[#040F0F] border border-[#cbd5e1] dark:border-[#57737A]/50 rounded-lg appearance-none focus:outline-none focus:border-[#C2FCF7] focus:shadow-[0_0_10px_rgba(194,252,247,0.2)] transition-all peer"
+        className="block w-full px-4 pt-6 pb-2 text-[#0f172a] dark:text-[#C2FCF7] bg-[#ffffff] dark:bg-[#57737A]/10 border border-[#cbd5e1] dark:border-[#57737A]/50 rounded-lg appearance-none focus:outline-none focus:border-[#C2FCF7] focus:shadow-[0_0_10px_rgba(194,252,247,0.2)] transition-all peer"
         placeholder=" "
       />
       <label
@@ -28,15 +28,16 @@ export default function AuthPage() {
   );
 
   return (
-    <BoneyardTransition className="flex-1 flex flex-col items-center justify-center p-6">
+    <BoneyardTransition className="flex-1 flex flex-col items-center justify-center p-6 bg-[#f8fafc] dark:bg-[#040F0F]">
       <div className="text-center mb-8">
         <div className="relative w-40 h-12 mx-auto mb-4">
-          <Image src="/logo.png" alt="SplitEX" fill className="object-contain" />
+          <div className="absolute inset-0 bg-white dark:bg-[#57737A]/30 rounded-md"></div>
+          <Image src="/logo.png" alt="SplitEX" fill className="object-contain relative z-10" />
         </div>
         <p className="text-[#475569] dark:text-[#85BDBF] tracking-wide">Split smart. Pay easy.</p>
       </div>
 
-      <Card className="w-full max-w-md !bg-[#f8fafc] dark:bg-[#57737A]/5 backdrop-blur-3xl shadow-[0_0_30px_rgba(201,191,255,0.05)] border border-[#e2e8f0] dark:border-[#57737A]/30">
+      <Card className="w-full max-w-md !bg-[#ffffff] dark:bg-[#57737A]/10 backdrop-blur-3xl shadow-[0_0_30px_rgba(201,191,255,0.05)] dark:shadow-[0_0_30px_rgba(194,252,247,0.05)] border border-[#e2e8f0] dark:border-[#57737A]/30">
         <div className="flex gap-4 mb-8">
           <button 
             className={`flex-1 pb-2 font-semibold transition-colors border-b-2 text-center ${isLogin ? "border-[#C9BFFF] text-[#6366f1] dark:text-[#C9BFFF]" : "border-transparent text-[#64748b] dark:text-[#57737A] hover:text-[#475569] dark:text-[#85BDBF]"}`}
@@ -70,7 +71,7 @@ export default function AuthPage() {
             </Link>
             
             {isLogin && (
-              <p className="text-center mt-6 text-sm text-[#475569] dark:text-[#85BDBF] hover:text-[#0f172a] dark:text-[#C2FCF7] cursor-pointer transition-colors hover:drop-shadow-[0_0_5px_#C2FCF7]">
+              <p className="text-center mt-6 text-sm text-[#475569] dark:text-[#85BDBF] hover:text-[#0f172a] dark:hover:text-[#C2FCF7] cursor-pointer transition-colors hover:drop-shadow-[0_0_5px_#C2FCF7]">
                 Forgot password?
               </p>
             )}

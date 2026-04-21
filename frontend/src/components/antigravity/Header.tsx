@@ -21,11 +21,14 @@ export const Header = () => {
     >
       <div className="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative w-8 h-8 sm:w-9 sm:h-9 group-hover:drop-shadow-[0_0_8px_#C9BFFF] transition-all">
-            <Image src="/small.logo.png" alt="SplitEX Logo" fill className="object-contain" />
+          {/* Mobile: small icon only, Desktop: full logo with text */}
+          <div className="relative w-8 h-8 sm:hidden group-hover:drop-shadow-[0_0_8px_#C9BFFF] transition-all">
+            <div className="absolute inset-0 bg-white dark:bg-[#57737A]/30 rounded-md"></div>
+            <Image src="/small.logo.png" alt="SplitEX" fill className="object-contain relative z-10" />
           </div>
-          <div className="relative h-6 w-20 sm:h-7 sm:w-24 hidden sm:block group-hover:drop-shadow-[0_0_8px_#C9BFFF] transition-all">
-            <Image src="/logo.png" alt="SplitEX" fill className="object-contain object-left" />
+          <div className="relative h-8 w-32 sm:h-9 sm:w-36 hidden sm:block group-hover:drop-shadow-[0_0_8px_#C9BFFF] transition-all">
+            <div className="absolute inset-0 bg-white dark:bg-[#57737A]/30 rounded-md"></div>
+            <Image src="/logo.png" alt="SplitEX" fill className="object-contain object-left relative z-10" />
           </div>
         </Link>
 
