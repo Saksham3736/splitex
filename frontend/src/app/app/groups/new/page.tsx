@@ -27,7 +27,10 @@ export default function NewGroupPage() {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { name: "", membersCsv: "" },
+    defaultValues: {
+      name: "Goa Trip 2026",
+      membersCsv: "rahul_demo_id,aman_demo_id,priya_demo_id",
+    },
   });
 
   return (
@@ -68,7 +71,7 @@ export default function NewGroupPage() {
           >
             <div className="space-y-2">
               <Label htmlFor="name">Group name</Label>
-              <Input id="name" placeholder="Goa Trip" {...form.register("name")} />
+              <Input id="name" placeholder="Goa Trip 2026" {...form.register("name")} />
               {form.formState.errors.name ? (
                 <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
               ) : null}
@@ -78,7 +81,7 @@ export default function NewGroupPage() {
               <Label htmlFor="membersCsv">Member user IDs (optional)</Label>
               <Textarea
                 id="membersCsv"
-                placeholder="user1,user2,user3"
+                placeholder="rahul_demo_id,aman_demo_id,priya_demo_id"
                 rows={3}
                 {...form.register("membersCsv")}
               />

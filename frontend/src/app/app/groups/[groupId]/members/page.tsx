@@ -19,6 +19,12 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
+const DEMO_USER_ID = "demo_user_akshay_01";
+const DEMO_MEMBERS = [
+  { user_id: "rahul_demo_id", user: { name: "Rahul Singh", email: "rahul@splitex.demo" } },
+  { user_id: "aman_demo_id", user: { name: "Aman Gupta", email: "aman@splitex.demo" } },
+  { user_id: "priya_demo_id", user: { name: "Priya Sharma", email: "priya@splitex.demo" } },
+];
 
 export default function GroupMembersPage() {
   const params = useParams<{ groupId: string }>();
@@ -30,7 +36,7 @@ export default function GroupMembersPage() {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { userId: "" },
+    defaultValues: { userId: DEMO_USER_ID },
   });
 
   return (
@@ -49,7 +55,7 @@ export default function GroupMembersPage() {
                 addMut.mutate(values.userId, {
                   onSuccess: () => {
                     toast.success("Member added");
-                    form.reset({ userId: "" });
+                    form.reset({ userId: DEMO_USER_ID });
                   },
                   onError: (err) => {
                     const message =
@@ -61,7 +67,7 @@ export default function GroupMembersPage() {
             >
               <div className="flex-1 space-y-2">
                 <Label htmlFor="userId">User ID</Label>
-                <Input id="userId" placeholder="user_uuid" {...form.register("userId")} />
+                <Input id="userId" placeholder={DEMO_USER_ID} {...form.register("userId")} />
                 {form.formState.errors.userId ? (
                   <p className="text-sm text-destructive">
                     {form.formState.errors.userId.message}
@@ -120,7 +126,22 @@ export default function GroupMembersPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No members found.</p>
+              <div className="space-y-2">
+                {DEMO_MEMBERS.map((m) => (
+                  <div
+                    key={m.user_id}
+                    className="flex items-center justify-between rounded-lg border px-3 py-2"
+                  >
+                    <div className="min-w-0">
+                      <div className="truncate text-sm font-medium">{m.user.name}</div>
+                      <div className="truncate text-xs text-muted-foreground">{m.user.email}</div>
+                    </div>
+                    <Button variant="outline" disabled>
+                      Demo
+                    </Button>
+                  </div>
+                ))}
+              </div>
             )}
           </CardContent>
         </Card>

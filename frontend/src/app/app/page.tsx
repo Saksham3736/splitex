@@ -1,13 +1,17 @@
 "use client";
 import { BoneyardTransition } from "@/components/antigravity/Boneyard";
 import { Card } from "@/components/antigravity/Card";
-import { Button } from "@/components/antigravity/Button";
 import { ExpenseItem } from "@/components/antigravity/ExpenseItem";
 import { BalanceCard } from "@/components/antigravity/BalanceCard";
-import { ArrowUpRight, ArrowDownRight, Plus, TrendingUp, Users, Wallet } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, TrendingUp, Users, Wallet } from "lucide-react";
 import Link from "next/link";
+import { CURRENCY_SYMBOL, convertFromInr, useWalletStore } from "@/store/wallet-store";
 
 export default function DashboardPage() {
+  const balanceInInr = useWalletStore((s) => s.balanceInInr);
+  const currency = useWalletStore((s) => s.currency);
+  const walletBalance = convertFromInr(balanceInInr, currency);
+
   return (
     <BoneyardTransition className="space-y-8 pb-20 md:pb-0">
       {/* Header Section */}
@@ -16,7 +20,6 @@ export default function DashboardPage() {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-[#6366f1] to-[#C2FCF7] dark:from-[#C9BFFF] dark:to-[#85BDBF] bg-clip-text text-transparent mb-2">Dashboard</h1>
           <p className="text-[#475569] dark:text-[#85BDBF] text-lg">Your financial overview across all groups.</p>
         </div>
-        <Button variant="primary" className="gap-2 px-6 py-3 text-base shadow-lg"><Plus size={18} /> Add Expense</Button>
       </div>
 
       {/* Quick Stats Cards */}
@@ -57,6 +60,20 @@ export default function DashboardPage() {
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card className="lg:col-span-2 p-5 border border-[#e2e8f0] dark:border-[#57737A]/30">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-[#64748b] dark:text-[#57737A] uppercase tracking-wider">Wallet Balance</p>
+              <h3 className="text-2xl font-bold text-[#6366f1] dark:text-[#C9BFFF] mt-1">
+                {CURRENCY_SYMBOL[currency]} {walletBalance.toLocaleString()}
+              </h3>
+            </div>
+            <Link href="/app/wallet" className="text-sm text-[#6366f1] dark:text-[#C9BFFF] hover:underline font-medium">
+              Open Wallet →
+            </Link>
+          </div>
+        </Card>
+
         {/* Active Balances Section */}
         <div>
           <div className="flex justify-between items-center mb-6">

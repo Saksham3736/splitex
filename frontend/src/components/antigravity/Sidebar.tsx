@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { LayoutDashboard, Users, CreditCard, Bell, User } from "lucide-react";
+import { LayoutDashboard, Users, CreditCard, Bell, User, Wallet } from "lucide-react";
 
 export const Sidebar = () => {
   const pathname = usePathname();
@@ -11,6 +11,7 @@ export const Sidebar = () => {
   const links = [
     { name: "Dashboard", href: "/app", icon: LayoutDashboard },
     { name: "Groups", href: "/app/groups", icon: Users },
+    { name: "Wallet", href: "/app/wallet", icon: Wallet },
     { name: "Settlements", href: "/app/settlements", icon: CreditCard },
     { name: "Notifications", href: "/app/notifications", icon: Bell },
     { name: "Profile", href: "/app/profile", icon: User },

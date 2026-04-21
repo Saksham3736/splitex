@@ -11,6 +11,7 @@ export default function GroupsPage() {
     { id: "2", name: "Apartment Rent", members: 3, balance: 1200 },
     { id: "3", name: "Weekend Party", members: 8, balance: 0 },
   ];
+  const defaultGroupId = groups[0]?.id;
 
   return (
     <BoneyardTransition className="space-y-8 pb-20 md:pb-0">
@@ -19,7 +20,20 @@ export default function GroupsPage() {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-[#6366f1] to-[#C2FCF7] dark:from-[#C9BFFF] dark:to-[#85BDBF] bg-clip-text text-transparent mb-2">Groups</h1>
           <p className="text-[#475569] dark:text-[#85BDBF] text-lg">Manage your shared expenses and track balances.</p>
         </div>
-        <Button variant="primary" className="gap-2 px-6 py-3 text-base shadow-lg"><Plus size={18} /> Create Group</Button>
+        <div className="flex items-center gap-3">
+          {defaultGroupId ? (
+            <Link href={`/app/groups/${defaultGroupId}/expenses/new`}>
+              <Button variant="secondary" className="gap-2 px-6 py-3 text-base shadow-lg">
+                <Plus size={18} /> Add Expense
+              </Button>
+            </Link>
+          ) : null}
+          <Link href="/app/groups/new">
+            <Button variant="primary" className="gap-2 px-6 py-3 text-base shadow-lg">
+              <Plus size={18} /> Create Group
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

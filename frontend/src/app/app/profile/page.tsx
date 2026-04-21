@@ -8,6 +8,10 @@ import { User, Mail, LogOut } from "lucide-react";
 export default function ProfilePage() {
   const user = useAuthStore((s) => s.user);
   const clearSession = useAuthStore((s) => s.clearSession);
+  const displayUser = user ?? {
+    name: "Saksham Verma",
+    email: "saksham@splitex.demo",
+  };
 
   return (
     <div className="flex flex-1 items-start justify-center px-4 py-6">
@@ -22,10 +26,15 @@ export default function ProfilePage() {
         <Card className="p-8">
           <div className="flex flex-col items-center text-center mb-8">
             <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#6366f1] to-[#C9BFFF] flex items-center justify-center text-white text-3xl font-bold mb-4 shadow-lg">
-              {user?.name?.charAt(0).toUpperCase() ?? 'U'}
+              {displayUser.name.charAt(0).toUpperCase()}
             </div>
-            <h2 className="text-2xl font-bold text-[#0f172a] dark:text-[#C2FCF7] mb-1">{user?.name ?? "User"}</h2>
-            <p className="text-[#64748b] dark:text-[#57737A]">{user?.email ?? "user@example.com"}</p>
+            <h2 className="text-2xl font-bold text-[#0f172a] dark:text-[#C2FCF7] mb-1">{displayUser.name}</h2>
+            <p className="text-[#64748b] dark:text-[#57737A]">{displayUser.email}</p>
+            {!user && (
+              <p className="text-xs text-[#64748b] dark:text-[#57737A] mt-2">
+                Demo profile shown until login data is available.
+              </p>
+            )}
           </div>
 
           <div className="space-y-4">
@@ -35,7 +44,7 @@ export default function ProfilePage() {
               </div>
               <div className="flex-1">
                 <p className="text-xs text-[#64748b] dark:text-[#57737A] font-medium uppercase tracking-wider mb-1">Full Name</p>
-                <p className="text-base font-semibold text-[#0f172a] dark:text-[#C2FCF7]">{user?.name ?? "—"}</p>
+                <p className="text-base font-semibold text-[#0f172a] dark:text-[#C2FCF7]">{displayUser.name}</p>
               </div>
             </div>
 
@@ -45,7 +54,7 @@ export default function ProfilePage() {
               </div>
               <div className="flex-1">
                 <p className="text-xs text-[#64748b] dark:text-[#57737A] font-medium uppercase tracking-wider mb-1">Email Address</p>
-                <p className="text-base font-semibold text-[#0f172a] dark:text-[#C2FCF7]">{user?.email ?? "—"}</p>
+                <p className="text-base font-semibold text-[#0f172a] dark:text-[#C2FCF7]">{displayUser.email}</p>
               </div>
             </div>
           </div>

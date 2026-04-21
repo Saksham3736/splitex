@@ -22,6 +22,7 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
+const DEMO_PAYER_ID = "rahul_demo_id";
 
 export default function NewExpensePage() {
   const params = useParams<{ groupId: string }>();
@@ -46,7 +47,11 @@ export default function NewExpensePage() {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { amount: 0, description: "", paidBy: "" },
+    defaultValues: {
+      amount: 2450,
+      description: "Dinner at Thalassa",
+      paidBy: DEMO_PAYER_ID,
+    },
   });
 
   useEffect(() => {
@@ -97,6 +102,7 @@ export default function NewExpensePage() {
                   id="amount"
                   type="number"
                   step="0.01"
+                  placeholder="2450"
                   {...form.register("amount", { valueAsNumber: true })}
                 />
                 {form.formState.errors.amount ? (
@@ -108,7 +114,7 @@ export default function NewExpensePage() {
 
               <div className="space-y-2">
                 <Label htmlFor="paidBy">Paid by (userId)</Label>
-                <Input id="paidBy" placeholder="user_uuid" {...form.register("paidBy")} />
+                <Input id="paidBy" placeholder={DEMO_PAYER_ID} {...form.register("paidBy")} />
                 <p className="text-xs text-muted-foreground">
                   Tip: paste a member user ID.
                 </p>
@@ -122,7 +128,12 @@ export default function NewExpensePage() {
 
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
-              <Textarea id="description" rows={3} {...form.register("description")} />
+              <Textarea
+                id="description"
+                rows={3}
+                placeholder="Dinner at Thalassa"
+                {...form.register("description")}
+              />
             </div>
 
             <div className="space-y-2">

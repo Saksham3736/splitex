@@ -14,7 +14,7 @@ import { getGroups } from "@/services/groups";
 import { getSettlementPlan, recordSettlement, getSettlementHistory } from "@/services/settlements";
 import { useMarkSettlementPaidMutation } from "@/hooks/api-hooks";
 import { generateUpiLink } from "@/services/payments";
-import { ArrowRight, CheckCircle, Clock, TrendingUp } from "lucide-react";
+import { ArrowRight, CheckCircle, Clock } from "lucide-react";
 
 type SettlementData = {
   groupId: string;
@@ -22,6 +22,10 @@ type SettlementData = {
   plans: any[];
   history: any[];
 };
+const DEMO_SETTLEMENT_GROUPS: SettlementData[] = [
+  { groupId: "demo-goa", groupName: "Goa Trip 2026", plans: [], history: [] },
+  { groupId: "demo-flat", groupName: "Flat Expenses", plans: [], history: [] },
+];
 
 export default function SettlementsPage() {
   const groupsQ = useQuery({
@@ -54,34 +58,23 @@ export default function SettlementsPage() {
     );
   }
 
-  if (!groupsQ.data || groupsQ.data.length === 0) {
-    return (
-      <BoneyardTransition className="space-y-8 pb-20 md:pb-0">
-        <div>
-          <h1 className="text-3xl font-bold text-[#6366f1] dark:text-[#C9BFFF] mb-2">Settlements</h1>
-          <p className="text-[#475569] dark:text-[#85BDBF]">Manage payments across all your groups.</p>
-        </div>
-        <Card className="p-12 text-center">
-          <TrendingUp size={48} className="mx-auto mb-4 text-[#64748b] dark:text-[#57737A]" />
-          <h3 className="text-xl font-semibold text-[#0f172a] dark:text-[#C2FCF7] mb-2">No Groups Yet</h3>
-          <p className="text-[#64748b] dark:text-[#57737A] mb-6">Create a group to start tracking expenses and settlements.</p>
-          <Link href="/app/groups/new">
-            <Button variant="primary">Create Your First Group</Button>
-          </Link>
-        </Card>
-      </BoneyardTransition>
-    );
-  }
+  const settlementGroups =
+    groupsQ.data && groupsQ.data.length > 0 ? settlementsData : DEMO_SETTLEMENT_GROUPS;
 
   return (
     <BoneyardTransition className="space-y-8 pb-20 md:pb-0">
       <div>
         <h1 className="text-3xl font-bold text-[#6366f1] dark:text-[#C9BFFF] mb-2">Settlements</h1>
         <p className="text-[#475569] dark:text-[#85BDBF]">Manage payments across all your groups.</p>
+        {(!groupsQ.data || groupsQ.data.length === 0) && (
+          <p className="text-sm text-[#64748b] dark:text-[#57737A] mt-2">
+            Showing demo settlement data. Create a group to see live settlements.
+          </p>
+        )}
       </div>
 
       <div className="space-y-8">
-        {settlementsData.map((data) => (
+        {settlementGroups.map((data) => (
           <SettlementGroupSection key={data.groupId} data={data} />
         ))}
       </div>
@@ -90,14 +83,17 @@ export default function SettlementsPage() {
 }
 
 function SettlementGroupSection({ data }: { data: SettlementData }) {
+  const isDemo = data.groupId.startsWith("demo-");
   const planQ = useQuery({
     queryKey: ["settlement-plan", data.groupId],
     queryFn: () => getSettlementPlan(data.groupId),
+    enabled: !isDemo,
   });
 
   const historyQ = useQuery({
     queryKey: ["settlements", data.groupId],
     queryFn: () => getSettlementHistory(data.groupId),
+    enabled: !isDemo,
   });
 
   const recordMut = useMutation({
@@ -128,6 +124,16 @@ function SettlementGroupSection({ data }: { data: SettlementData }) {
     const map = new Map<string, { name: string; upi?: string | null }>();
     return map;
   }, []);
+  const demoPlan = [
+    { from: "Rahul Singh", to: "You", amount: 950 },
+    { from: "Aman Gupta", to: "You", amount: 550 },
+  ];
+  const demoHistory = [
+    { id: "h1", payer_id: "You", receiver_id: "Priya Sharma", amount: 1200, payment_status: "completed" },
+    { id: "h2", payer_id: "Karan Mehta", receiver_id: "You", amount: 700, payment_status: "pending" },
+  ];
+  const plans = isDemo ? demoPlan : (planQ.data ?? []);
+  const history = isDemo ? demoHistory : (historyQ.data ?? []);
 
   return (
     <div className="space-y-4">
@@ -151,9 +157,9 @@ function SettlementGroupSection({ data }: { data: SettlementData }) {
           <div className="space-y-2">
             <Skeleton className="h-12 w-full" />
           </div>
-        ) : planQ.data && planQ.data.length > 0 ? (
+        ) : plans.length > 0 ? (
           <div className="space-y-3">
-            {planQ.data.slice(0, 3).map((p: any, idx: number) => (
+            {plans.slice(0, 3).map((p: any, idx: number) => (
               <div
                 key={idx}
                 className="flex items-center justify-between p-3 rounded-lg bg-[#f8fafc] dark:bg-[#57737A]/10 border border-[#e2e8f0] dark:border-[#57737A]/30"
@@ -188,10 +194,10 @@ function SettlementGroupSection({ data }: { data: SettlementData }) {
                 </div>
               </div>
             ))}
-            {planQ.data.length > 3 && (
+            {plans.length > 3 && (
               <Link href={`/app/groups/${data.groupId}/settle`}>
                 <p className="text-sm text-[#6366f1] dark:text-[#C9BFFF] hover:underline cursor-pointer text-center">
-                  View all {planQ.data.length} settlements →
+                  View all {plans.length} settlements →
                 </p>
               </Link>
             )}
@@ -201,13 +207,13 @@ function SettlementGroupSection({ data }: { data: SettlementData }) {
         )}
       </Card>
 
-      {historyQ.data && historyQ.data.length > 0 && (
+      {history.length > 0 && (
         <Card className="p-4">
           <h3 className="text-sm font-semibold text-[#64748b] dark:text-[#57737A] uppercase tracking-wider mb-4">
             Recent History
           </h3>
           <div className="space-y-2">
-            {historyQ.data.slice(0, 2).map((s: any) => (
+            {history.slice(0, 2).map((s: any) => (
               <div
                 key={s.id}
                 className="flex items-center justify-between p-3 rounded-lg bg-[#f8fafc] dark:bg-[#57737A]/10 border border-[#e2e8f0] dark:border-[#57737A]/30"

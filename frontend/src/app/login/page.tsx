@@ -1,14 +1,21 @@
 "use client";
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { BoneyardTransition } from "@/components/antigravity/Boneyard";
 import { Card } from "@/components/antigravity/Card";
 import { Button } from "@/components/antigravity/Button";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true);
+  const pathname = usePathname();
+  const [isLogin, setIsLogin] = useState(pathname !== "/signup");
+
+  useEffect(() => {
+    setIsLogin(pathname !== "/signup");
+  }, [pathname]);
 
   const InputField = ({ label, type, id }: { label: string, type: string, id: string }) => (
     <div className="relative group mb-6">

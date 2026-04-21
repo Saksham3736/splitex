@@ -10,11 +10,12 @@ import { ScanModal } from "@/components/antigravity/ScanModal";
 import { ScannedBillReview } from "@/components/antigravity/ScannedBillReview";
 import { Users, Plus, ArrowLeft, ScanLine } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 export default function GroupDetailPage() {
-  const params = useParams();
+  const params = useParams<{ groupId: string }>();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"expenses" | "balances" | "settlements">("expenses");
 
   // OCR Scan State
@@ -64,7 +65,11 @@ export default function GroupDetailPage() {
           <Button variant="secondary" className="gap-2 flex-1 sm:flex-none" onClick={() => setIsScanModalOpen(true)}>
             <ScanLine size={18} /> Scan Bill
           </Button>
-          <Button variant="primary" className="gap-2 flex-1 sm:flex-none">
+          <Button
+            variant="primary"
+            className="gap-2 flex-1 sm:flex-none"
+            onClick={() => router.push(`/app/groups/${params.groupId}/expenses/new`)}
+          >
             <Plus size={18} /> Add
           </Button>
         </div>

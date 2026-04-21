@@ -2,6 +2,7 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, UploadCloud, ScanLine, FileText } from "lucide-react";
+import { toast } from "sonner";
 
 interface ScanModalProps {
   isOpen: boolean;
@@ -12,12 +13,38 @@ interface ScanModalProps {
 export const ScanModal = ({ isOpen, onClose, onScanComplete }: ScanModalProps) => {
   const [isScanning, setIsScanning] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const OCR_ENDPOINT = process.env.NEXT_PUBLIC_OCR_ENDPOINT ?? "http://localhost:8000/scan-receipt";
+  const OCR_API_KEY = process.env.NEXT_PUBLIC_OCR_API_KEY ?? "K82235660888957";
+
+  const applyFile = (incoming: File | null) => {
+    if (!incoming) return;
+    if (!incoming.type.startsWith("image/")) return;
+    setFile(incoming);
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-    }
+    applyFile(e.target.files?.[0] ?? null);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+    applyFile(e.dataTransfer.files?.[0] ?? null);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
   };
 
   const handleScan = async () => {
@@ -28,22 +55,33 @@ export const ScanModal = ({ isOpen, onClose, onScanComplete }: ScanModalProps) =
     formData.append("file", file);
 
     try {
-      // Point to Python FastAPI service
-      const res = await fetch("http://localhost:8000/scan-receipt", {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 12000);
+
+      const res = await fetch(OCR_ENDPOINT, {
         method: "POST",
+        headers: {
+          "x-api-key": OCR_API_KEY,
+        },
         body: formData,
+        signal: controller.signal,
       });
-      
+      clearTimeout(timeout);
+
+      if (!res.ok) {
+        throw new Error(`OCR request failed with status ${res.status}`);
+      }
+
       const data = await res.json();
-      
+
       setTimeout(() => {
         setIsScanning(false);
         onScanComplete(data);
       }, 1000);
       
     } catch (error) {
-      console.error("Scan error:", error);
-      // Fallback if backend is down
+      // Fallback to mock scan data if OCR service is unreachable
+      toast.error("OCR service unreachable. Using demo scan output.");
       setTimeout(() => {
         setIsScanning(false);
         onScanComplete({
@@ -81,11 +119,18 @@ export const ScanModal = ({ isOpen, onClose, onScanComplete }: ScanModalProps) =
 
             {!isScanning ? (
               <div className="space-y-4">
-                <div 
+                <div
                   className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-colors ${
-                    file ? 'border-[#6366f1] dark:border-[#C9BFFF] bg-[#e0e7ff] dark:bg-[#C9BFFF]/5' : 'border-[#cbd5e1] dark:border-[#57737A]/50 hover:border-[#6366f1] dark:hover:border-[#C9BFFF]'
+                    isDragOver
+                      ? "border-[#6366f1] dark:border-[#C9BFFF] bg-[#e0e7ff] dark:bg-[#C9BFFF]/10"
+                      : file
+                      ? "border-[#6366f1] dark:border-[#C9BFFF] bg-[#e0e7ff] dark:bg-[#C9BFFF]/5"
+                      : "border-[#cbd5e1] dark:border-[#57737A]/50 hover:border-[#6366f1] dark:hover:border-[#C9BFFF]"
                   }`}
                   onClick={() => fileInputRef.current?.click()}
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
                 >
                   <input type="file" className="hidden" ref={fileInputRef} accept="image/*" onChange={handleFileChange} />
                   {file ? (
