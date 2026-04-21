@@ -1,199 +1,278 @@
-# 🚀 SplitEX — Smart Expense Splitting with UPI Integration
+# 🚀 SplitEX — Pitch Document
 
-## 🧠 Problem Statement
+## 🧠 Problem
 
-Managing shared expenses in groups is inefficient and often leads to confusion:
+Managing shared expenses in groups today is still frustrating and inefficient:
 
-- Manual calculations are error-prone  
-- Tracking “who owes whom” becomes messy  
-- Too many transactions increase friction  
-- No seamless way to settle payments instantly  
-- Existing solutions lack deep integration with Indian payment systems (UPI)
-
----
-
-## 💡 Solution — SplitEX
-
-SplitEX is a **real-time expense sharing platform** that:
-
-- Tracks shared expenses within groups  
-- Automatically calculates balances  
-- Minimizes the number of transactions  
-- Enables instant settlement using UPI  
-- Sends smart reminders for pending dues  
-
-👉 “Split smart. Pay easy.”
+* Manual calculations often lead to mistakes
+* Tracking balances becomes confusing in larger groups
+* Too many transactions create unnecessary friction
+* Settling payments is not seamless
+* Existing apps are not optimized for Indian users and UPI workflows
 
 ---
 
-## ⚙️ Key Features
+## 💡 Our Solution — SplitEX
+
+**SplitEX** is a smart expense-sharing platform designed to simplify group finances with:
+
+* Automated balance tracking
+* Optimized settlements
+* Seamless UPI-based payments
+* Real-time synchronization
+
+👉 *Split smart. Pay easy.*
+
+---
+
+## ⚙️ Core Features
 
 ### 👥 Group Management
-- Create groups (trip, roommates, events)
-- Add/remove members
-- Role-based access
+
+* Create and manage groups (trips, roommates, events)
+* Add/remove members easily
+* Role-based access control
 
 ---
 
 ### 💸 Expense Tracking
-- Add expenses easily
-- Multiple split types:
-  - Equal
-  - Exact
-  - Percentage
-- Real-time updates
+
+* Add expenses in seconds
+* Flexible split options:
+
+  * Equal
+  * Exact
+  * Percentage
+* Real-time updates across all users
 
 ---
 
-### 📊 Balance Calculation
-- Automatically computes:
-  - Who owes whom
-  - How much each person owes
-- Maintains accurate ledger
+### 📊 Balance Engine
+
+* Automatically calculates:
+
+  * Who owes whom
+  * Exact payable amounts
+* Maintains a clean and transparent ledger
 
 ---
 
 ### 🔁 Smart Settlement Optimizer
-- Minimizes number of transactions
-- Reduces complexity in large groups
-- Uses greedy algorithm for optimization
+
+* Reduces number of transactions
+* Uses a greedy algorithm to simplify settlements
+* Ideal for large groups
 
 ---
 
-### 💳 UPI Payment Integration
-- Generate UPI payment links
-- Works with:
-  - Google Pay
-  - PhonePe
-  - Paytm
-- Fast and seamless settlement
+### 💳 UPI Integration
+
+* Generate UPI payment links instantly
+* Works with all major apps (GPay, PhonePe, Paytm)
+* Enables one-click settlements
 
 ---
 
 ### 🔔 Smart Notifications
-- Payment reminders
-- Expense alerts
-- Settlement confirmations
+
+* Payment reminders
+* Expense alerts
+* Settlement confirmations
 
 ---
 
-### ⚡ Real-time Sync
-- Live updates using WebSockets
-- No manual refresh needed
+### ⚡ Real-Time Sync
+
+* Live updates using WebSockets
+* No refresh required
+
+---
+
+## 🧾 🆕 Image-Based Bill Scanning (NEW FEATURE)
+
+To eliminate manual entry, SplitEX introduces a **Python-powered OCR scanning system**:
+
+### 🔍 What It Does
+
+* Users upload a receipt image
+* System extracts:
+
+  * Line items
+  * Prices
+  * Total amount
+* Converts it into structured expense data
+
+---
+
+### ⚙️ How It Works
+
+#### Python OCR Microservice
+
+* Built using **FastAPI**
+* Endpoint: `/scan-receipt`
+* Processes uploaded images using:
+
+  * `pytesseract`
+  * `opencv-python`
+* Extracts structured JSON:
+
+```json
+[
+  { "item": "Pizza", "price": 450 },
+  { "item": "Coke", "price": 80 }
+]
+```
+
+---
+
+### 🧑‍💻 User Flow
+
+1. Click **“Scan Bill”**
+2. Upload receipt image
+3. System scans and extracts data
+4. User reviews & edits items
+5. Click **“Confirm & Split”**
+6. Expense added automatically
+
+---
+
+### 🎯 Key Benefits
+
+* Eliminates manual data entry
+* Saves time
+* Reduces human errors
+* Improves user experience
 
 ---
 
 ## 🧱 Tech Stack
 
 ### Frontend
-- React / Next.js
-- Tailwind CSS
+
+* React / Next.js
+* Tailwind CSS
 
 ### Backend
-- Node.js + Express
+
+* Node.js + Express
 
 ### Database
-- PostgreSQL + Prisma
+
+* **MongoDB** (NoSQL, flexible schema for scaling groups & expenses)
 
 ### Realtime
-- Socket.IO
+
+* Socket.IO
+
+### OCR Service
+
+* Python + FastAPI
+* Tesseract + OpenCV
 
 ### Notifications
-- Firebase Cloud Messaging
+
+* Firebase Cloud Messaging
 
 ### Payments
-- UPI Deep Links
+
+* UPI Deep Links
 
 ---
 
 ## 🏗️ Architecture
 
-- Modular Monolith Design  
-- Scalable to Microservices  
-- Clean separation of modules:
-  - Auth
-  - Groups
-  - Expenses
-  - Balances
-  - Settlements
-  - Notifications
+* Modular Monolith Design
+* Easily scalable to microservices
+
+### Core Modules:
+
+* Authentication
+* Groups
+* Expenses
+* Balances
+* Settlements
+* Notifications
+* OCR Service (Python Microservice)
 
 ---
 
-## 🔄 How It Works (Simple Flow)
+## 🔄 Product Flow
 
-1. User creates a group  
-2. Adds shared expenses  
-3. System calculates balances  
-4. Settlement optimizer minimizes transactions  
-5. User pays via UPI  
-6. System updates records & sends notifications  
-
----
-
-## 🎯 Unique Selling Points (USP)
-
-- 🇮🇳 **UPI-first design for Indian users**
-- ⚡ Real-time group expense tracking
-- 🧠 Smart settlement optimization
-- 📱 Clean and intuitive UI
-- 🔔 Intelligent reminders
-- 🚀 Hackathon-ready scalable architecture
+1. User logs in
+2. Creates a group
+3. Adds expense OR scans bill
+4. System calculates balances
+5. Optimizer reduces transactions
+6. User pays via UPI
+7. System updates and notifies
 
 ---
 
-## 🤖 AI Enhancements (Optional)
+## 🎯 Unique Selling Points
 
-- Natural language expense entry  
-  > “Aman paid ₹1200 for dinner for 3 people”
+* 🇮🇳 Built specifically for Indian users (UPI-first)
+* 📸 Image-based expense entry (OCR scanning)
+* ⚡ Real-time syncing
+* 🧠 Smart transaction minimization
+* 📱 Clean, intuitive UI
 
-- Smart reminder generation  
-- Expense categorization from receipts  
+---
+
+## ❌ What We Are NOT Doing
+
+To keep the product focused and reliable:
+
+* ❌ No AI-based financial insights
+* ❌ No complex prediction systems
+* ❌ No unnecessary feature bloat
+
+👉 Focus is on **speed, accuracy, and usability**
 
 ---
 
 ## 📈 Future Scope
 
-- AI-powered financial insights  
-- Multi-currency support  
-- Recurring expenses  
-- Integration with banking APIs  
-- Advanced analytics dashboard  
+* Multi-currency support
+* Recurring expense tracking
+* Bank API integrations
+* Advanced analytics dashboard
 
 ---
 
 ## 👨‍💻 Team Contributions
 
-| Role | Responsibility |
-|------|--------------|
-| Frontend | UI/UX & user experience |
-| Backend | API & logic |
-| Database | Schema & optimization |
-| AI/Integration | Smart features |
+| Role            | Responsibility               |
+| --------------- | ---------------------------- |
+| Frontend        | UI/UX & user interaction     |
+| Backend         | APIs & business logic        |
+| Database        | Schema design & optimization |
+| OCR Integration | Receipt scanning system      |
 
 ---
 
-## 🎬 Demo Flow (For Presentation)
+## 🎬 Demo Flow
 
-1. Login / Signup  
-2. Create group  
-3. Add expense  
-4. Show balance calculation  
-5. Show settlement optimization  
-6. Click “Pay via UPI”  
-7. Mark as paid  
-8. Show notification  
+1. Login / Signup
+2. Create group
+3. Add expense OR scan bill
+4. Show balance calculation
+5. Show optimized settlement
+6. Click “Pay via UPI”
+7. Mark as paid
+8. Show notifications
 
 ---
 
 ## 🏁 Conclusion
 
-SplitEX simplifies group expense management by combining:
-- automation  
-- optimization  
-- and seamless payments  
+SplitEX simplifies shared expenses by combining:
 
-👉 Making shared finances **simple, transparent, and efficient**
+* Automation
+* Optimization
+* Seamless payments
+* Image-based expense entry
+
+👉 Making group finances **simple, fast, and transparent**
 
 ---
 

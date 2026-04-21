@@ -1,2 +1,0 @@
-# splitex
-Complete documwntation structure

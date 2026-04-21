@@ -1,31 +1,32 @@
-# 📄 2. `Api-spec.md`
-
 # 🔌 SplitEX API Specification
 
 ## 📌 Overview
 
-This document defines the REST API endpoints for SplitEX.  
-The backend follows a modular structure and exposes endpoints for authentication, groups, expenses, balances, settlements, and notifications.
+This document defines the REST API endpoints for SplitEX.
+
+The backend follows a modular architecture using:
+
+* Node.js + Express
+* MongoDB (NoSQL)
+* Socket.IO (Realtime)
+* Python OCR Microservice (for bill scanning)
 
 ---
 
 ## 🌐 Base URL
 
 ```
-
-[http://localhost:5000/api](http://localhost:5000/api)
-
+http://localhost:5000/api
 ```
 
+---
 
 ## 🔐 Authentication
 
 All protected routes require:
 
 ```
-
 Authorization: Bearer <JWT_TOKEN>
-
 ```
 
 ---
@@ -36,10 +37,9 @@ Authorization: Bearer <JWT_TOKEN>
 
 ```
 POST /auth/signup
+```
 
-````
-
-## Body:
+### Body:
 
 ```json
 {
@@ -47,8 +47,9 @@ POST /auth/signup
   "email": "saksham@example.com",
   "password": "123456"
 }
-````
+```
 
+---
 
 ## Login
 
@@ -60,10 +61,12 @@ POST /auth/login
 
 ```json
 {
+  "success": true,
   "token": "jwt_token",
   "user": {
-    "id": "user_id",
-    "name": "Saksham"
+    "_id": "user_id",
+    "name": "Saksham",
+    "email": "saksham@example.com"
   }
 }
 ```
@@ -126,7 +129,7 @@ POST /groups
 ## Get All Groups
 
 ```
-GET /groups
+GET /groups?page=1&limit=10
 ```
 
 ---
@@ -171,7 +174,11 @@ POST /groups/:groupId/expenses
   "paidBy": "user1",
   "description": "Dinner",
   "splitType": "equal",
-  "participants": ["user1", "user2", "user3"]
+  "participants": [
+    { "userId": "user1" },
+    { "userId": "user2" },
+    { "userId": "user3" }
+  ]
 }
 ```
 
@@ -180,7 +187,7 @@ POST /groups/:groupId/expenses
 ## Get Expenses
 
 ```
-GET /groups/:groupId/expenses
+GET /groups/:groupId/expenses?page=1&limit=10
 ```
 
 ---
@@ -209,6 +216,56 @@ DELETE /expenses/:expenseId
 
 ---
 
+# 🧾 🆕 OCR / BILL SCANNING MODULE
+
+## Scan Receipt
+
+```
+POST /ocr/scan-receipt
+```
+
+### Body (multipart/form-data):
+
+* image: file
+
+### Response:
+
+```json
+{
+  "success": true,
+  "data": {
+    "items": [
+      { "name": "Pizza", "price": 450 },
+      { "name": "Coke", "price": 80 }
+    ],
+    "total": 530
+  }
+}
+```
+
+---
+
+## Confirm Scanned Expense
+
+```
+POST /groups/:groupId/expenses/from-scan
+```
+
+### Body:
+
+```json
+{
+  "items": [
+    { "name": "Pizza", "price": 450 },
+    { "name": "Coke", "price": 80 }
+  ],
+  "paidBy": "user1",
+  "participants": ["user1", "user2"]
+}
+```
+
+---
+
 # 📊 BALANCE MODULE
 
 ## Get Group Balances
@@ -225,13 +282,16 @@ GET /groups/:groupId/balances
 GET /groups/:groupId/net-balances
 ```
 
-### Example Response:
+### Response:
 
 ```json
 {
-  "user1": 500,
-  "user2": -200,
-  "user3": -300
+  "success": true,
+  "data": {
+    "user1": 500,
+    "user2": -200,
+    "user3": -300
+  }
 }
 ```
 
@@ -248,18 +308,13 @@ GET /groups/:groupId/settlement-plan
 ### Response:
 
 ```json
-[
-  {
-    "from": "user2",
-    "to": "user1",
-    "amount": 200
-  },
-  {
-    "from": "user3",
-    "to": "user1",
-    "amount": 300
-  }
-]
+{
+  "success": true,
+  "data": [
+    { "from": "user2", "to": "user1", "amount": 200 },
+    { "from": "user3", "to": "user1", "amount": 300 }
+  ]
+}
 ```
 
 ---
@@ -336,6 +391,7 @@ POST /payments/upi-link
 
 ```json
 {
+  "success": true,
   "upiLink": "upi://pay?pa=user@upi&pn=Saksham&am=250&cu=INR"
 }
 ```
@@ -356,6 +412,20 @@ Standard error format:
 
 ---
 
+# 🔄 STANDARD RESPONSE FORMAT
+
+All APIs follow:
+
+```json
+{
+  "success": true,
+  "data": {},
+  "message": "Optional message"
+}
+```
+
+---
+
 # 🔄 STATUS CODES
 
 | Code | Meaning      |
@@ -371,7 +441,7 @@ Standard error format:
 
 # 🧪 TESTING
 
-Use tools:
+Tools:
 
 * Postman
 * Thunder Client (VS Code)
@@ -383,13 +453,9 @@ Use tools:
 This API is designed to be:
 
 * RESTful
-* Modular
-* Easy to scale
-* Hackathon-friendly
-* Production-ready with minimal changes
+* MongoDB-optimized
+* Real-time ready
+* OCR-enabled (bill scanning)
+* Scalable and production-ready
 
----
-
-
-
-
+👉 Built for **speed, simplicity, and extensibility**
